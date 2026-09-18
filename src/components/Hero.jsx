@@ -18,7 +18,7 @@ export default function Hero() {
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/header.mp4" type="video/mp4" />
-          Votre navigateur ne supporte pas la lecture de vidéos.
+          Votre navigateur ne peux pas supporte pas la lecture de vidéos.
         </video>
         {/* Overlay sombre pour la lisibilité */}
         <div className="absolute inset-0 bg-black/20 z-10"></div>
