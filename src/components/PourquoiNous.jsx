@@ -24,7 +24,7 @@ export default function PourquoiNous() {
             Pourquoi réserver sur GrandH ?
           </Reveal>
           <Reveal as="p" animation="fade" delay={150} duration={600} className="text-sm md:text-base text-gray-50 max-w-2xl mx-auto">
-            Une plateforme conçue sur-mesure pour les exigences des voyageurs en Côte d'Ivoire, alliant flexibilité financière et certitude logistique.
+            Une plateforme conçue sur-mesure pour les exigences des clients en Côte d'Ivoire, alliant flexibilité financière et certitude logistique.
           </Reveal>
         </div>
 
