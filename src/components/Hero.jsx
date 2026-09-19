@@ -81,12 +81,12 @@ export default function Hero() {
           
           <Reveal animation="fade-up" delay={300}>
             <div className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-3">
-              Hôtel<span className="text-orange-500">Soft</span>
+              Grand<span className="text-orange-500">H</span>
             </div>
           </Reveal>
 
           <Reveal animation="fade-up" delay={400}>
-            <h1 className="text-3xl sm:text-4xl md:text-4xl text-white font-bold tracking-tight max-w-4xl !m-0 !mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-4xl text-white font-bold tracking-tight max-w-4xl m-0! mb-4!">
               Trouvez la chambre parfaite<br />À Abidjan
             </h1>
           </Reveal>

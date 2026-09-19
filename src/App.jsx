@@ -1,4 +1,11 @@
 import Hero from './components/Hero';
+import CommuneSearch from './components/CommuneSearch';
+import SidebarreZonne from './components/SidebarreZonne';
+import PourquoiNous from './components/PourquoiNous';
+import Stat from './components/Stat';
+import Avis from './components/Avis';
+import Partennaire from './components/Patennaire';
+import Footer from './components/Footer';
 
 import Navbar from './components/Navbar';
 // Modals et Notifications
@@ -13,10 +20,15 @@ function App() {
 
         <main className="grow">
           <Hero />
-          
+          <Stat />
+          <CommuneSearch />
+          <SidebarreZonne />
+          <PourquoiNous />
+          <Avis />
+          <Partennaire />
         </main>
-
-       
+        <Footer />
+        
       </div>
     </ModalProvider>
   );
