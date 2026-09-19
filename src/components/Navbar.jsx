@@ -33,14 +33,13 @@ export default function Navbar() {
         {/* Logo / Nom de la marque */}
         <a href="#" className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-slate-900 animate-pulse"></span>
-          Ismo<span className="text-blue-700">Maintenance</span>
+          Grand<span className="text-orange-500">H</span>
         </a>
 
         {/* Liens de navigation (Desktop) */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-900">
           <a href="#" className="hover:text-blue-900 transition-colors">Accueil</a>
           <a href="#a-propos" className="hover:text-blue-900 transition-colors">À propos</a>
-          <a href="#services" className="hover:text-blue-900 transition-colors">Services</a>
           <a href="#tarifs" className="hover:text-blue-900 transition-colors">Tarifs</a>
           <a href="#contact" className="hover:text-blue-900 transition-colors">Contact</a>
         </nav>
@@ -51,7 +50,7 @@ export default function Navbar() {
             onClick={() => openRdv()}
             className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-md cursor-pointer rounded-full"
           >
-            Prendre rendez-vous
+            Se connecter
           </button>
         </div>
 
@@ -114,9 +113,9 @@ export default function Navbar() {
               setMobileMenuOpen(false);
               openRdv();
             }}
-            className="mt-2 w-full text-center py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm transition-all shadow-md cursor-pointer"
+            className="mt-2 w-full text-center py-3 rounded-sm bg-slate-800 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-md cursor-pointer"
           >
-            Prendre rendez-vous
+            Se connecter
           </button>
         </div>
       )}
