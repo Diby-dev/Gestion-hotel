@@ -8,7 +8,15 @@ export default function SidebarreZonne() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 relative overflow-x-hidden">
+    <div 
+      className="flex flex-col md:flex-row min-h-screen relative overflow-x-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/side.jpg')" }}
+    >
+      {/* Filtre blanc en haut de l'image */}
+      <div className="absolute top-0 inset-x-0 h-48 md:h-64 bg-linear-to-b from-white via-white/85 to-transparent pointer-events-none z-0" />
+      
+      {/* Filtre blanc en bas de l'image */}
+      <div className="absolute bottom-0 inset-x-0 h-48 md:h-64 bg-linear-to-t from-white via-white/85 to-transparent pointer-events-none z-0" />
       
       {/* BARRE DE NAVIGATION MOBILE */}
       <div className="md:hidden flex items-center justify-between bg-white px-4 py-3 border-b border-gray-200 shadow-sm z-30">
@@ -171,7 +179,7 @@ export default function SidebarreZonne() {
       </aside>
 
       {/* CORPS PRINCIPAL : PRÉSENTATION PAR COMMUNE */}
-      <main className="flex-1 p-6 md:p-8 md:ml-6 overflow-y-auto space-y-12">
+      <main className="flex-1 p-6 md:p-8 md:ml-6 overflow-y-auto space-y-12 relative z-10">
         
         <div className="mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Hôtels et Chambres par Commune</h2>
