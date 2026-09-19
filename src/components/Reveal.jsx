@@ -9,15 +9,15 @@ import { useEffect, useRef, useState } from 'react';
  * @param {number} threshold Seuil de visibilité (0 à 1) pour déclencher l'animation
  * @param {string} rootMargin Marge de l'IntersectionObserver
  * @param {boolean} once Déclenche l'animation une seule fois (défaut: true)
- * @param {string} as Élément HTML à utiliser (div, span, h2, p, a, etc.)
+ * @param {string} as Élément HTML à utiliser (div, span, h2, p, a, button, section, etc.)
  */
 export default function Reveal({
   children,
   animation = 'fade-up',
   delay = 0,
   duration = 700,
-  threshold = 0.15,
-  rootMargin = '0px 0px -40px 0px',
+  threshold = 0.08,
+  rootMargin = '0px 0px -20px 0px',
   once = true,
   className = '',
   as: Component = 'div',
@@ -30,6 +30,12 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Respect des préférences d'accessibilité utilisateur
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
 
     // Détection immédiate si l'élément est déjà visible dans l'écran lors du chargement
     const rect = el.getBoundingClientRect();
@@ -73,22 +79,22 @@ export default function Reveal({
     switch (animation) {
       case 'fade-up':
       case 'slide-up':
-        return 'translate3d(0, 36px, 0)';
+        return 'translate3d(0, 32px, 0)';
       case 'fade-down':
       case 'slide-down':
-        return 'translate3d(0, -36px, 0)';
+        return 'translate3d(0, -32px, 0)';
       case 'fade-left':
       case 'slide-left':
         // Vient de la droite et se déplace vers la gauche
-        return 'translate3d(40px, 0, 0)';
+        return 'translate3d(36px, 0, 0)';
       case 'fade-right':
       case 'slide-right':
         // Vient de la gauche et se déplace vers la droite
-        return 'translate3d(-40px, 0, 0)';
+        return 'translate3d(-36px, 0, 0)';
       case 'zoom-in':
-        return 'scale(0.88)';
+        return 'scale(0.92)';
       case 'zoom-out':
-        return 'scale(1.1)';
+        return 'scale(1.08)';
       case 'fade':
       default:
         return 'none';

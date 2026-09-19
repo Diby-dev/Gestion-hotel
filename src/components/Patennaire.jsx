@@ -1,6 +1,11 @@
+import Reveal from './Reveal';
+import { useModal } from '../context/ModalContext';
+
 export default function PartnerBanner() {
+  const { navigate, showToast } = useModal();
+
   return (
-    <section className="relative w-full py-12 overflow-hidden">
+    <section id="partenaires" className="relative w-full py-12 overflow-hidden scroll-mt-12">
       
       {/* 1. Image de fond globale (Prend toute la largeur de l'écran) */}
       <div className="absolute inset-0 z-0">
@@ -31,9 +36,8 @@ export default function PartnerBanner() {
           {/* Contenu principal */}
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             
-            {/* Partie gauche : Textes et badge */}
-            <div className="max-w-2xl space-y-4">
-              
+            {/* Partie gauche : Textes et badge - vient de la gauche */}
+            <Reveal animation="fade-right" duration={700} className="max-w-2xl space-y-4">
               {/* Badge supérieur */}
               <div className="inline-flex items-center space-x-2 bg-white/10 border border-white/15 px-3 py-1 rounded-full text-xs font-medium text-gray-200 backdrop-blur-md">
                 <svg className="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,30 +55,35 @@ export default function PartnerBanner() {
               <p className="text-gray-300 text-sm md:text-base leading-relaxed">
                 Rejoignez le 1er réseau hôtelier ivoirien. Boostez votre taux d'occupation, évitez les réservations fantômes et encaissez vos acomptes Mobile Money automatiquement sans tracas.
               </p>
-            </div>
+            </Reveal>
 
-            {/* Partie droite : Boutons d'action */}
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 min-w-60">
-              <a 
-                href="#inscription" 
-                className="inline-flex items-center justify-center bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm px-6 py-3.5 rounded-xl shadow-lg transition-all duration-200 group"
+            {/* Partie droite : Boutons d'action - vient de la droite */}
+            <Reveal animation="fade-left" delay={150} duration={700} className="flex flex-col sm:flex-row lg:flex-col gap-3 min-w-60">
+              <button 
+                id="inscription"
+                onClick={() => navigate('/connexion')}
+                className="inline-flex items-center justify-center bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm px-6 py-3.5 rounded-xl shadow-lg transition-all duration-200 group cursor-pointer"
               >
                 <span>Inscrire mon hôtel gratuitement</span>
                 <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </a>
+              </button>
 
-              <a 
-                href="#demonstration" 
-                className="inline-flex items-center justify-center bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-6 py-3.5 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-200"
+              <button 
+                onClick={() => {
+                  const target = document.getElementById('chambres');
+                  if (target) target.scrollIntoView({ behavior: 'smooth' });
+                  showToast('Découvrez nos hôtels référencés ci-dessous !');
+                }}
+                className="inline-flex items-center justify-center bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-6 py-3.5 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-200 cursor-pointer"
               >
                 <svg className="w-4 h-4 mr-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <span>Découvrir la démonstration</span>
-              </a>
-            </div>
+              </button>
+            </Reveal>
 
           </div>
 
@@ -83,18 +92,18 @@ export default function PartnerBanner() {
 
           {/* Statistiques en bas de carte */}
           <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
-            <div>
+            <Reveal animation="fade-up" delay={200} duration={600}>
               <div className="text-xl md:text-2xl font-black text-white tracking-tight">+45%</div>
               <div className="text-xs md:text-sm text-gray-400 mt-0.5">De réservations directes</div>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal animation="fade-up" delay={300} duration={600}>
               <div className="text-xl md:text-2xl font-black text-white tracking-tight">0 FCFA</div>
               <div className="text-xs md:text-sm text-gray-400 mt-0.5">Frais d'adhésion</div>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal animation="fade-up" delay={400} duration={600}>
               <div className="text-xl md:text-2xl font-black text-white tracking-tight">24h</div>
               <div className="text-xs md:text-sm text-gray-400 mt-0.5">Délai d'activation</div>
-            </div>
+            </Reveal>
           </div>
 
         </div>

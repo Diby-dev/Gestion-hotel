@@ -1,0 +1,43 @@
+export const hotels = [
+  {
+    id: 'hotel-yop-1',
+    name: 'Residence meublée du boss',
+    commune: 'Yopougon',
+    address: 'Yopougon Selmer, près du Nouveau Marché, Abidjan',
+    basePrice: 20000,
+    rating: 4.5,
+    stars: 3,
+    reviewsCount: 84,
+    image: '/hotel-yop1.jpg',
+    shortDesc: 'Chambre propre, climatisée et économique au cœur de Yopougon.',
+    description: 'Située dans un quartier calme et sécurisé de Yopougon, cette résidence meublée propose des chambres modernes et climatisées avec groupe électrogène permanent, eau chaude garantie et parking surveillé 24h/24.',
+  },
+  {
+    id: 'hotel-yop-2',
+    name: 'Palais de Niangon',
+    commune: 'Yopougon',
+    address: 'Niangon Sud à droite, Carrefour Lubafrique, Abidjan',
+    basePrice: 25000,
+    rating: 4.6,
+    stars: 4,
+    reviewsCount: 112,
+    image: '/hotel-yop2.jpg',
+    shortDesc: 'Cadre calme, spacieux et sécurisé avec toutes les commodités.',
+    description: "Cadre spacieux et feutré à Niangon, avec Wi-Fi haut débit, literie grand confort et accueil 24h/24.",
+  },
+  {
+    id: 'hotel-cocody-1',
+    name: 'Hôtel Ivoire Palace',
+    commune: 'Cocody',
+    address: 'Cocody Ambassades, Rue des Jardins prolongée, Abidjan',
+    basePrice: 35000,
+    rating: 4.8,
+    stars: 4,
+    reviewsCount: 156,
+    image: '/hotel-cocody1.jpg',
+    shortDesc: 'Chambre standard climatisée avec Wi-Fi haut débit et literie de luxe.',
+    description: 'Le raffinement au cœur de Cocody : suites climatisées, room service et sécurité maximale pour vos séjours.',
+  },
+];
+
+export const getHotelById = (id) => hotels.find((hotel) => hotel.id === id);
