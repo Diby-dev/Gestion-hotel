@@ -8,7 +8,13 @@ export function ModalProvider({ children }) {
   const [loginModal, setLoginModal] = useState({ isOpen: false });
   const [projectModal, setProjectModal] = useState({ isOpen: false, project: null });
   const [legalModal, setLegalModal] = useState({ isOpen: false, type: '' });
+  const [hotelModal, setHotelModal] = useState({ isOpen: false, hotel: null });
   const [toasts, setToasts] = useState([]);
+
+  const navigate = useCallback((path) => {
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, []);
 
   // Toasts
   const showToast = useCallback((message, type = 'success') => {
@@ -40,7 +46,7 @@ export function ModalProvider({ children }) {
     setDevisModal({ isOpen: false });
   }, []);
 
-  // Login / Suivi
+  // Login
   const openLogin = useCallback(() => {
     setLoginModal({ isOpen: true });
   }, []);
@@ -64,6 +70,14 @@ export function ModalProvider({ children }) {
     setLegalModal({ isOpen: false, type: '' });
   }, []);
 
+  // Hotel details / Réservation
+  const openHotel = useCallback((hotel) => {
+    setHotelModal({ isOpen: true, hotel });
+  }, []);
+  const closeHotel = useCallback(() => {
+    setHotelModal({ isOpen: false, hotel: null });
+  }, []);
+
   return (
     <ModalContext.Provider
       value={{
@@ -82,9 +96,13 @@ export function ModalProvider({ children }) {
         legalModal,
         openLegal,
         closeLegal,
+        hotelModal,
+        openHotel,
+        closeHotel,
         toasts,
         showToast,
         removeToast,
+        navigate,
       }}
     >
       {children}

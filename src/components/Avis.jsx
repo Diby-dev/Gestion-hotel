@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Reveal from './Reveal';
 
 // Données des avis
 const avisList = [
@@ -66,16 +67,16 @@ export default function Avis() {
       
       {/* Titre de la section */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 mb-12 text-center">
-        <h2 className="text-gray-900 text-2xl md:text-3xl font-bold">
+        <Reveal as="h2" animation="fade-down" duration={600} className="text-gray-900 text-2xl md:text-3xl font-bold">
           Ce que pensent nos utilisateurs
-        </h2>
-        <p className="text-gray-600 text-sm mt-2">
+        </Reveal>
+        <Reveal as="p" animation="fade" delay={150} duration={600} className="text-gray-600 text-sm mt-2">
           Découvrez les retours d'expérience de ceux qui nous font confiance.
-        </p>
+        </Reveal>
       </div>
 
       {/* Conteneur du défilement infini */}
-      <div className="relative w-full overflow-hidden flex">
+      <Reveal animation="fade-up" delay={200} duration={800} className="relative w-full overflow-hidden flex">
         
         {/* Dégradés sur les côtés (fond blanc) */}
         <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-white to-transparent z-10 pointer-events-none"></div>
@@ -123,7 +124,7 @@ export default function Avis() {
             </div>
           ))}
         </div>
-      </div>
+      </Reveal>
 
       {/* Style CSS personnalisé pour l'animation */}
       <style>{`
