@@ -20,7 +20,7 @@ export default function LoginModal() {
       setIsLoggedIn(true);
       showToast(
         tab === 'client'
-          ? 'Bienvenue sur votre espace voyageur GrandH !'
+          ? 'Bienvenue sur votre espace client GrandH !'
           : 'Bienvenue sur votre portail propriétaire GrandH Pro !'
       );
     }, 800);
@@ -69,7 +69,7 @@ export default function LoginModal() {
                   : 'border-transparent text-gray-500 hover:text-gray-900'
               }`}
             >
-              👤 Client / Voyageur
+              👤 Client
             </button>
             <button
               onClick={() => setTab('pro')}
@@ -92,7 +92,7 @@ export default function LoginModal() {
               </div>
               <div className="flex flex-col gap-1">
                 <h4 className="text-xl font-bold text-gray-900">
-                  {tab === 'client' ? 'Session Voyageur Active' : 'Session Propriétaire Active'}
+                  {tab === 'client' ? 'Session Client Active' : 'Session Propriétaire Active'}
                 </h4>
                 <p className="text-sm text-gray-600">
                   Connecté en tant que <strong className="text-gray-800">{email || 'utilisateur@grandh.ci'}</strong>

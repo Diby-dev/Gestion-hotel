@@ -173,7 +173,7 @@ export default function HotelDetailModal() {
                   <span className="font-medium text-gray-800">{nights} nuit(s) ({checkIn} ➔ {checkOut})</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Voyageur</span>
+                  <span className="text-gray-500">Client</span>
                   <span className="font-medium text-gray-800">{guestName || 'Client GrandH'} ({guestPhone || '+225 07000000'})</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-gray-200">
@@ -448,7 +448,7 @@ export default function HotelDetailModal() {
                       {nights} Nuit(s)
                     </span>
                     <span>•</span>
-                    <span className="font-semibold text-white">{persons} Voyageur(s)</span>
+                    <span className="font-semibold text-white">{persons} Client(s)</span>
                   </div>
                   <div className="text-right">
                     <span className="text-gray-400 mr-2">Total estimé pour {currentRoom.name} :</span>

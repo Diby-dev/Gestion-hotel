@@ -6,7 +6,7 @@ const avisList = [
   {
     id: 1,
     name: "Kouassi Jean",
-    role: "Voyageur",
+    role: "Client",
     comment: "Super site ! J'ai pu trouver et réserver mon hôtel à Yopougon en quelques clics. Très fluide et rapide.",
     rating: 5,
   },
