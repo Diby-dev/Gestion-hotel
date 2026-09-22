@@ -1,22 +1,19 @@
-import Hero from './components/Hero';
-import CommuneSearch from './components/CommuneSearch';
-import SidebarreZonne from './components/SidebarreZonne';
-import PourquoiNous from './components/PourquoiNous';
-import Stat from './components/Stat';
-import Avis from './components/Avis';
-import Partennaire from './components/Patennaire';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 
 // Modals et Notifications
 import { ModalProvider } from './context/ModalContext';
 import ToastContainer from './components/ToastContainer';
-import LoginPage from './components/LoginPage';
-import BookingPage from './components/BookingPage';
-import SignUpPage from './components/SignUpPage';
-import OwnerDashboard from './components/OwnerDashboard';
-import SuperAdminAuthPage from './components/SuperAdminAuthPage';
-import SuperAdminDashboard from './components/SuperAdminDashboard';
+
+// Pages
+import HomePage from './pages/home/page';
+import LoginPage from './pages/login/page';
+import SignUpPage from './pages/signup/page';
+import BookingPage from './pages/booking/page';
+import OwnerDashboard from './pages/dashboard/page';
+import SuperAdminAuthPage from './pages/super-admin-auth/page';
+import SuperAdminDashboard from './pages/super-admin-dashboard/page';
+
 import { useEffect, useState } from 'react';
 
 function AppContent() {
@@ -34,7 +31,7 @@ function AppContent() {
   return <>
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
       <Navbar />
-      <main className="grow"><Hero /><Stat /><CommuneSearch /><SidebarreZonne /><PourquoiNous /><Avis /><Partennaire /></main>
+      <HomePage />
       <Footer />
     </div>
     <ToastContainer />
