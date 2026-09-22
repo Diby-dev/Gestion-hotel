@@ -1,0 +1,75 @@
+-- 1. Suppression des tables existantes (dans l'ordre inverse des dépendances)
+DROP TABLE IF EXISTS reservations;
+DROP TABLE IF EXISTS chambres;
+DROP TABLE IF EXISTS hotels;
+DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS admins;
+DROP TABLE IF EXISTS super_admins;
+
+-- 2. Table des super-administrateurs
+CREATE TABLE super_admins (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Table des administrateurs (ajout de super_admin_id : un super-admin ajoute un ou plusieurs admin)
+CREATE TABLE admins (
+    id SERIAL PRIMARY KEY,
+    super_admin_id INT REFERENCES super_admins(id) ON DELETE CASCADE,
+    nom VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Table des clients
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. Table des hôtels (ajout de admin_id : un admin ajoute un ou plusieurs hôtel)
+CREATE TABLE hotels (
+    id SERIAL PRIMARY KEY,
+    admin_id INT REFERENCES admins(id) ON DELETE CASCADE,
+    nom VARCHAR(100) NOT NULL,
+    quartier VARCHAR(100) NOT NULL,
+    adresse TEXT NOT NULL,
+    telephone VARCHAR(20),
+    email VARCHAR(100),
+    image_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 6. Table des chambres (liée à l'hôtel et à l'admin qui l'a ajoutée)
+CREATE TABLE chambres (
+    id SERIAL PRIMARY KEY,
+    hotel_id INT REFERENCES hotels(id) ON DELETE CASCADE,
+    admin_id INT REFERENCES admins(id) ON DELETE CASCADE,
+    numero_chambre VARCHAR(20) NOT NULL,
+    type_chambre VARCHAR(50) NOT NULL, -- Ex: 'Standard', 'VIP', 'Suite'
+    prix_nuit DECIMAL(10, 2) NOT NULL,
+    capacite INT NOT NULL DEFAULT 2,
+    est_disponible BOOLEAN DEFAULT TRUE,
+    description TEXT,
+    image_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Table des réservations (liée aux chambres et aux clients)
+CREATE TABLE reservations (
+    id SERIAL PRIMARY KEY,
+    chambre_id INT REFERENCES chambres(id) ON DELETE CASCADE,
+    client_id INT REFERENCES clients(id) ON DELETE CASCADE,
+    date_arrivee DATE NOT NULL,
+    date_depart DATE NOT NULL,
+    prix_total DECIMAL(10, 2) NOT NULL,
+    statut VARCHAR(20) DEFAULT 'en_attente', -- en_attente, confirmee, annulee
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

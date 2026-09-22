@@ -1,122 +1,52 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import Hero from './components/Hero';
+import CommuneSearch from './components/CommuneSearch';
+import SidebarreZonne from './components/SidebarreZonne';
+import PourquoiNous from './components/PourquoiNous';
+import Stat from './components/Stat';
+import Avis from './components/Avis';
+import Partennaire from './components/Patennaire';
+import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Modals et Notifications
+import { ModalProvider } from './context/ModalContext';
+import ToastContainer from './components/ToastContainer';
+import LoginPage from './components/LoginPage';
+import BookingPage from './components/BookingPage';
+import SignUpPage from './components/SignUpPage';
+import OwnerDashboard from './components/OwnerDashboard';
+import SuperAdminAuthPage from './components/SuperAdminAuthPage';
+import SuperAdminDashboard from './components/SuperAdminDashboard';
+import { useEffect, useState } from 'react';
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p className="text-9xl">
-            OK CA FONCTIONNE TRES BIEN MAIS IL FAUT QUE JE TROUVE UN MOYEN DE FAIRE EN SORTE QUE LE CODE S'EXECUTE DANS LE FICHIER VITE.CONFIG.JS ET PAS DANS LE FICHIER APP.JSX
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+function AppContent() {
+  const [path, setPath] = useState(window.location.pathname);
+  useEffect(() => {
+    const updatePath = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', updatePath);
+    return () => window.removeEventListener('popstate', updatePath);
+  }, []);
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+  if (path === '/connexion' || path === '/inscription' || path === '/proprietaire/tableau-de-bord' || path === '/secret-administration' || path === '/super-admin/tableau-de-bord' || path.startsWith('/reservation/')) {
+    const page = path === '/connexion' ? <LoginPage /> : path === '/inscription' ? <SignUpPage /> : path === '/proprietaire/tableau-de-bord' ? <OwnerDashboard /> : path === '/secret-administration' ? <SuperAdminAuthPage /> : path === '/super-admin/tableau-de-bord' ? <SuperAdminDashboard /> : <BookingPage hotelId={path.split('/').pop()} />;
+    return <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col"><Navbar alwaysVisible /><div className="grow">{page}</div><Footer /><ToastContainer /></div>;
+  }
+  return <>
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+      <Navbar />
+      <main className="grow"><Hero /><Stat /><CommuneSearch /><SidebarreZonne /><PourquoiNous /><Avis /><Partennaire /></main>
+      <Footer />
+    </div>
+    <ToastContainer />
+  </>;
 }
 
-export default App
+function App() {
+  return (
+    <ModalProvider>
+      <AppContent />
+    </ModalProvider>
+  );
+}
+
+export default App;
