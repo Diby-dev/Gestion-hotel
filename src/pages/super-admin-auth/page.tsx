@@ -1,80 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { useModal } from '../../context/ModalContext';
+import { useAuth } from '../../context/AuthContext';
+import { api, messageForError } from '../../lib/api';
 
 export default function SuperAdminAuthPage() {
-  const { navigate } = useModal();
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    navigate('/super-admin/tableau-de-bord');
-  };
-
-  return (
-    <main className="min-h-175 bg-slate-950 px-4 pb-16 pt-32">
-      <section className="mx-auto max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl">
-        <div className="bg-linear-to-br from-violet-700 to-slate-950 p-8 text-white">
-          <p className="text-xs font-bold uppercase tracking-[.2em] text-violet-200">Accès restreint</p>
-          <h1 className="mt-3 text-3xl font-black">Super-admin</h1>
-          <p className="mt-2 text-sm text-violet-100">Environnement de démonstration GrandH.</p>
-        </div>
-
-        <div className="p-7">
-          <div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1">
-            <button
-              onClick={() => setMode('login')}
-              className={`rounded-lg py-2.5 text-sm font-bold ${
-                mode === 'login' ? 'bg-white shadow text-violet-700' : 'text-slate-500'
-              }`}
-            >
-              Connexion
-            </button>
-            <button
-              onClick={() => setMode('register')}
-              className={`rounded-lg py-2.5 text-sm font-bold ${
-                mode === 'register' ? 'bg-white shadow text-violet-700' : 'text-slate-500'
-              }`}
-            >
-              Enregistrer
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            {mode === 'register' && (
-              <label className="block text-sm font-bold">
-                Nom administrateur
-                <input
-                  required
-                  className="mt-2 w-full rounded-xl border border-slate-200 p-3 outline-none focus:ring-4 focus:ring-violet-100"
-                />
-              </label>
-            )}
-            <label className="block text-sm font-bold">
-              Identifiant
-              <input
-                required
-                className="mt-2 w-full rounded-xl border border-slate-200 p-3 outline-none focus:ring-4 focus:ring-violet-100"
-                placeholder="admin@grandh.ci"
-              />
-            </label>
-            <label className="block text-sm font-bold">
-              Mot de passe
-              <input
-                required
-                type="password"
-                className="mt-2 w-full rounded-xl border border-slate-200 p-3 outline-none focus:ring-4 focus:ring-violet-100"
-              />
-            </label>
-            <button className="w-full rounded-xl bg-violet-700 py-3.5 font-bold text-white transition hover:bg-violet-800">
-              {mode === 'login' ? 'Accéder au tableau de bord' : 'Créer l’accès admin'}
-            </button>
-          </form>
-
-          <p className="mt-5 text-center text-xs text-slate-400">
-            Simulation uniquement — aucune donnée réelle n'est enregistrée.
-          </p>
-        </div>
-      </section>
-    </main>
-  );
+  const { navigate } = useModal(); const { saveSession } = useAuth(); const [mode, setMode] = useState<'login' | 'register'>('login'); const [form, setForm] = useState({ prenom: '', nom: '', telephone: '', cle: '', email: '', password: '', password_confirmation: '' }); const [error, setError] = useState(''); const [loading, setLoading] = useState(false);
+  const change = (key: string, value: string) => setForm({ ...form, [key]: value });
+  const submit = async (e: FormEvent) => { e.preventDefault(); setError(''); setLoading(true); try { const payload = mode === 'login' ? { email: form.email, password: form.password } : form; const session = await api(mode === 'login' ? '/login' : '/register-super-admin', { method: 'POST', body: JSON.stringify(payload) }); saveSession(session); navigate('/super-admin/tableau-de-bord'); } catch (caught) { setError(messageForError(caught)); } finally { setLoading(false); } };
+  return <main className="min-h-[700px] bg-slate-950 px-4 pb-16 pt-32"><section className="mx-auto max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"><div className="bg-linear-to-br from-violet-700 to-slate-950 p-8 text-white"><p className="text-xs font-bold uppercase tracking-[.2em] text-violet-200">Accès restreint</p><h1 className="mt-3 text-3xl font-black">Super-admin</h1><p className="mt-2 text-sm text-violet-100">Gestion réelle des comptes via l’API.</p></div><div className="p-7"><div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1"><button type="button" onClick={() => setMode('login')} className={`rounded-lg py-2.5 text-sm font-bold ${mode === 'login' ? 'bg-white text-violet-700 shadow' : 'text-slate-500'}`}>Connexion</button><button type="button" onClick={() => setMode('register')} className={`rounded-lg py-2.5 text-sm font-bold ${mode === 'register' ? 'bg-white text-violet-700 shadow' : 'text-slate-500'}`}>Inscription</button></div><form onSubmit={submit} className="mt-6 space-y-4">{mode === 'register' && <><label className="block text-sm font-bold">Prénom<input required value={form.prenom} onChange={e => change('prenom', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label><label className="block text-sm font-bold">Nom<input required value={form.nom} onChange={e => change('nom', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label><label className="block text-sm font-bold">Téléphone<input required value={form.telephone} onChange={e => change('telephone', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label><label className="block text-sm font-bold">Clé d’inscription<input required value={form.cle} onChange={e => change('cle', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label></>}<label className="block text-sm font-bold">E-mail<input required type="email" value={form.email} onChange={e => change('email', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label><label className="block text-sm font-bold">Mot de passe<input required type="password" minLength={8} value={form.password} onChange={e => change('password', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label>{mode === 'register' && <label className="block text-sm font-bold">Confirmation<input required type="password" minLength={8} value={form.password_confirmation} onChange={e => change('password_confirmation', e.target.value)} className="mt-2 w-full rounded-xl border p-3" /></label>}{error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<button disabled={loading} className="w-full rounded-xl bg-violet-700 py-3.5 font-bold text-white disabled:opacity-60">{loading ? 'Envoi…' : mode === 'login' ? 'Accéder au tableau de bord' : 'Créer le compte'}</button></form></div></section></main>;
 }

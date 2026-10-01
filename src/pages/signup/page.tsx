@@ -1,87 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { useModal } from '../../context/ModalContext';
+import { useAuth } from '../../context/AuthContext';
+import { api, messageForError } from '../../lib/api';
 
 export default function SignUpPage() {
-  const { navigate } = useModal();
-  const [created, setCreated] = useState(false);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setCreated(true);
-  };
-
-  return (
-    <main className="relative isolate min-h-[680px] overflow-hidden px-4 pb-16 pt-32 sm:pt-36">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,_rgba(249,115,22,.16),_transparent_28%),radial-gradient(circle_at_85%_15%,_rgba(34,197,94,.18),_transparent_30%)]" />
-      <section className="mx-auto max-w-xl rounded-[2rem] border border-white/70 bg-white p-7 shadow-2xl shadow-slate-300/50 sm:p-10">
-        {created ? (
-          <div className="py-12 text-center">
-            <div className="text-5xl text-green-600">✓</div>
-            <h1 className="mt-5 text-3xl font-black">Compte créé !</h1>
-            <p className="mt-3 text-slate-500">Votre espace GrandH est prêt à être utilisé.</p>
-            <button
-              onClick={() => navigate('/connexion')}
-              className="mt-8 rounded-xl bg-green-600 px-6 py-3 font-bold text-white transition hover:bg-green-700"
-            >
-              Se connecter
-            </button>
-          </div>
-        ) : (
-          <>
-            <p className="text-sm font-bold uppercase tracking-widest text-orange-600">GrandH</p>
-            <h1 className="mt-2 text-3xl font-black">Créer votre compte</h1>
-            <p className="mt-2 text-sm text-slate-500">Quelques informations suffisent pour commencer.</p>
-            <form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2">
-              <label className="text-sm font-bold text-slate-700">
-                Prénom
-                <input
-                  required
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 outline-none focus:ring-4 focus:ring-green-100"
-                />
-              </label>
-              <label className="text-sm font-bold text-slate-700">
-                Nom
-                <input
-                  required
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 outline-none focus:ring-4 focus:ring-green-100"
-                />
-              </label>
-              <label className="text-sm font-bold text-slate-700 sm:col-span-2">
-                Adresse e-mail
-                <input
-                  required
-                  type="email"
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 outline-none focus:ring-4 focus:ring-green-100"
-                  placeholder="vous@exemple.com"
-                />
-              </label>
-              <label className="text-sm font-bold text-slate-700 sm:col-span-2">
-                Mot de passe
-                <input
-                  required
-                  type="password"
-                  minLength={6}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 outline-none focus:ring-4 focus:ring-green-100"
-                  placeholder="6 caractères minimum"
-                />
-              </label>
-              <label className="flex gap-2 text-sm text-slate-500 sm:col-span-2">
-                <input required type="checkbox" className="mt-1 accent-green-600" />
-                J'accepte les conditions d'utilisation.
-              </label>
-              <button className="rounded-xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-600/25 transition hover:bg-green-700 sm:col-span-2">
-                Créer mon compte
-              </button>
-            </form>
-            <p className="mt-7 text-center text-sm text-slate-500">
-              Déjà inscrit ?{' '}
-              <button onClick={() => navigate('/connexion')} className="font-bold text-green-700 hover:underline">
-                Se connecter
-              </button>
-            </p>
-          </>
-        )}
-      </section>
-    </main>
-  );
+  const { navigate } = useModal(); const { saveSession } = useAuth();
+  const [form, setForm] = useState({ prenom: '', nom: '', email: '', telephone: '', password: '', password_confirmation: '', role: 'client' });
+  const [error, setError] = useState(''); const [loading, setLoading] = useState(false);
+  const change = (key: string, value: string) => setForm({ ...form, [key]: value });
+  const handleSubmit = async (e: FormEvent) => { e.preventDefault(); setLoading(true); setError(''); try { const session = await api('/register', { method: 'POST', body: JSON.stringify(form) }); saveSession(session); navigate(form.role === 'admin' ? '/proprietaire/tableau-de-bord' : '/'); } catch (caught) { setError(messageForError(caught)); } finally { setLoading(false); } };
+  return <main className="relative isolate min-h-[680px] overflow-hidden px-4 pb-16 pt-32 sm:pt-36"><section className="mx-auto max-w-xl rounded-[2rem] border border-white/70 bg-white p-7 shadow-2xl sm:p-10"><p className="text-sm font-bold uppercase tracking-widest text-orange-600">GrandH</p><h1 className="mt-2 text-3xl font-black">Créer votre compte</h1><p className="mt-2 text-sm text-slate-500">Les clients et administrateurs d’hôtel peuvent s’inscrire ici.</p><form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2"><label className="text-sm font-bold">Prénom<input required value={form.prenom} onChange={e => change('prenom', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" /></label><label className="text-sm font-bold">Nom<input required value={form.nom} onChange={e => change('nom', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" /></label><label className="text-sm font-bold sm:col-span-2">Type de compte<select value={form.role} onChange={e => change('role', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5"><option value="client">Client — réserver un séjour</option><option value="admin">Administrateur d’hôtel — gérer hôtels et chambres</option></select></label><label className="text-sm font-bold sm:col-span-2">Téléphone<input required value={form.telephone} onChange={e => change('telephone', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" placeholder="+225 …" /></label><label className="text-sm font-bold sm:col-span-2">Adresse e-mail<input required type="email" value={form.email} onChange={e => change('email', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" /></label><label className="text-sm font-bold">Mot de passe<input required type="password" minLength={8} value={form.password} onChange={e => change('password', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" /></label><label className="text-sm font-bold">Confirmation<input required type="password" minLength={8} value={form.password_confirmation} onChange={e => change('password_confirmation', e.target.value)} className="mt-2 w-full rounded-xl border p-3.5" /></label>{error && <p role="alert" className="sm:col-span-2 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<button disabled={loading} className="rounded-xl bg-green-600 py-4 font-bold text-white disabled:opacity-60 sm:col-span-2">{loading ? 'Création…' : 'Créer mon compte'}</button></form><p className="mt-7 text-center text-sm text-slate-500">Déjà inscrit ? <button onClick={() => navigate('/connexion')} className="font-bold text-green-700 hover:underline">Se connecter</button></p></section></main>;
 }

@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 
 // Modals et Notifications
 import { ModalProvider } from './context/ModalContext';
+import { AuthProvider } from './context/AuthContext';
 import ToastContainer from './components/ToastContainer';
 
 // Pages
@@ -40,9 +41,7 @@ function AppContent() {
 
 function App() {
   return (
-    <ModalProvider>
-      <AppContent />
-    </ModalProvider>
+    <AuthProvider><ModalProvider><AppContent /></ModalProvider></AuthProvider>
   );
 }
 
