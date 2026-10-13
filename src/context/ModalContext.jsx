@@ -11,6 +11,8 @@ export function ModalProvider({ children }) {
   const [hotelModal, setHotelModal] = useState({ isOpen: false, hotel: null });
   const [toasts, setToasts] = useState([]);
 
+  const [selectedCommune, setSelectedCommune] = useState('all');
+
   const navigate = useCallback((path) => {
     window.history.pushState({}, '', path);
     window.dispatchEvent(new PopStateEvent('popstate'));
@@ -99,6 +101,8 @@ export function ModalProvider({ children }) {
         hotelModal,
         openHotel,
         closeHotel,
+        selectedCommune,
+        setSelectedCommune,
         toasts,
         showToast,
         removeToast,

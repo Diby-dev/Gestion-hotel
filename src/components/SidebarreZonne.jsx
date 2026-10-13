@@ -3,7 +3,7 @@ import Reveal from './Reveal';
 import { useModal } from '../context/ModalContext';
 
 export default function SidebarreZonne() {
-  const { navigate } = useModal();
+  const { navigate, selectedCommune, setSelectedCommune } = useModal();
 
   const [openPrix, setOpenPrix] = useState(false);
   const [openNom, setOpenNom] = useState(true);
@@ -13,7 +13,6 @@ export default function SidebarreZonne() {
 
   // Filtres actifs
   const [searchNom, setSearchNom] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('all');
   const [selectedMaxPrice, setSelectedMaxPrice] = useState(null);
   const [selectedStanding, setSelectedStanding] = useState(null);
 
@@ -64,12 +63,18 @@ export default function SidebarreZonne() {
   const filteredHotels = useMemo(() => {
     return allHotels.filter((hotel) => {
       // Filtre nom
-      if (searchNom.trim() && !hotel.name.toLowerCase().includes(searchNom.toLowerCase())) {
+      if (searchNom.trim() && !hotel.name.toLowerCase().includes(searchNom.toLowerCase().trim())) {
         return false;
       }
-      // Filtre commune
-      if (selectedCommune !== 'all' && hotel.commune.toLowerCase() !== selectedCommune.toLowerCase()) {
-        return false;
+      // Filtre commune intelligent (cherche dans la commune, l'adresse ou le nom)
+      if (selectedCommune && selectedCommune !== 'all') {
+        const query = selectedCommune.toLowerCase().trim();
+        const matchCommune = hotel.commune.toLowerCase().includes(query);
+        const matchAddress = hotel.address.toLowerCase().includes(query);
+        const matchName = hotel.name.toLowerCase().includes(query);
+        if (!matchCommune && !matchAddress && !matchName) {
+          return false;
+        }
       }
       // Filtre prix max
       if (selectedMaxPrice && hotel.basePrice > selectedMaxPrice) {
@@ -85,6 +90,7 @@ export default function SidebarreZonne() {
 
   const yopougonHotels = filteredHotels.filter((h) => h.commune === 'Yopougon');
   const cocodyHotels = filteredHotels.filter((h) => h.commune === 'Cocody');
+  const otherHotels = filteredHotels.filter((h) => h.commune !== 'Yopougon' && h.commune !== 'Cocody');
 
   return (
     <div 
@@ -386,8 +392,37 @@ export default function SidebarreZonne() {
           </div>
         )}
 
+        {/* BANDEAU DE FILTRE ACTIF */}
+        {(selectedCommune !== 'all' || searchNom.trim() || selectedMaxPrice || selectedStanding) && (
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 px-5 py-3.5 rounded-2xl text-emerald-900 shadow-sm animate-fadeIn">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-sm font-semibold">
+                Filtre actif : {selectedCommune !== 'all' && <span>Commune <strong className="text-emerald-950 underline decoration-emerald-400">« {selectedCommune} »</strong></span>}
+                {searchNom.trim() && <span> | Nom <strong className="text-emerald-950">« {searchNom} »</strong></span>}
+                {selectedMaxPrice && <span> | Max <strong>{selectedMaxPrice.toLocaleString()} F</strong></span>}
+                <span className="ml-1 text-xs text-emerald-700 font-normal">
+                  ({filteredHotels.length} établissement{filteredHotels.length > 1 ? 's' : ''} trouvé{filteredHotels.length > 1 ? 's' : ''})
+                </span>
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                setSearchNom('');
+                setSelectedCommune('all');
+                setSelectedMaxPrice(null);
+                setSelectedStanding(null);
+              }}
+              className="text-xs bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+            >
+              <span>✕</span>
+              <span>Tout réinitialiser</span>
+            </button>
+          </div>
+        )}
+
         {/* SECTION 1 : YOPOUGON */}
-        {(selectedCommune === 'all' || selectedCommune.toLowerCase() === 'yopougon') && yopougonHotels.length > 0 && (
+        {yopougonHotels.length > 0 && (
           <section className="space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
             <Reveal animation="fade-right" duration={600}>
               <div>
@@ -453,7 +488,7 @@ export default function SidebarreZonne() {
         )}
 
         {/* SECTION 2 : COCODY */}
-        {(selectedCommune === 'all' || selectedCommune.toLowerCase() === 'cocody') && cocodyHotels.length > 0 && (
+        {cocodyHotels.length > 0 && (
           <section className="space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
             <Reveal animation="fade-left" duration={600}>
               <div>
@@ -495,6 +530,53 @@ export default function SidebarreZonne() {
                       <span>★ {h.rating}</span>
                       <span className="text-gray-300">({h.reviewsCount})</span>
                     </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <span className="text-xs text-orange-500 font-bold uppercase tracking-wider">{h.commune}</span>
+                      <h4 className="text-lg font-bold text-gray-800 mt-1">{h.name}</h4>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{h.shortDesc}</p>
+                    </div>
+
+                    <button 
+                      onClick={() => navigate(`/reservation/${h.id}`)}
+                      className="mt-5 w-full bg-green-600 hover:bg-green-700 active:scale-98 text-white py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <span>Réserver</span>
+                      <span>➔</span>
+                    </button>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* SECTION 3 : AUTRES COMMUNES */}
+        {otherHotels.length > 0 && (
+          <section className="space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <Reveal animation="fade-up" duration={600}>
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">Autres destinations & Communes</h3>
+                <p className="text-sm text-gray-500">Établissements sélectionnés dans d'autres communes d'Abidjan.</p>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+              {otherHotels.map((h, i) => (
+                <Reveal 
+                  key={h.id}
+                  animation="fade-up" 
+                  delay={100 * (i + 1)} 
+                  duration={700} 
+                  className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow flex flex-col justify-between"
+                >
+                  <div className="h-48 bg-gray-200 relative overflow-hidden group">
+                    <img src={h.image} alt={h.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <span className="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded-lg font-medium shadow">
+                      {h.basePrice.toLocaleString()} fcfa / nuit
+                    </span>
                   </div>
 
                   <div className="p-5 flex-1 flex flex-col justify-between">
