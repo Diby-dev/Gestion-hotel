@@ -17,6 +17,7 @@ import SignUpPage from './components/SignUpPage';
 import OwnerDashboard from './components/OwnerDashboard';
 import SuperAdminAuthPage from './components/SuperAdminAuthPage';
 import SuperAdminDashboard from './components/SuperAdminDashboard';
+import ClientDashboard from './pages/client-dashboard/page';
 import { useEffect, useState } from 'react';
 
 function AppContent() {
@@ -27,8 +28,8 @@ function AppContent() {
     return () => window.removeEventListener('popstate', updatePath);
   }, []);
 
-  if (path === '/connexion' || path === '/inscription' || path === '/proprietaire/tableau-de-bord' || path === '/secret-administration' || path === '/super-admin/tableau-de-bord' || path.startsWith('/reservation/')) {
-    const page = path === '/connexion' ? <LoginPage /> : path === '/inscription' ? <SignUpPage /> : path === '/proprietaire/tableau-de-bord' ? <OwnerDashboard /> : path === '/secret-administration' ? <SuperAdminAuthPage /> : path === '/super-admin/tableau-de-bord' ? <SuperAdminDashboard /> : <BookingPage hotelId={path.split('/').pop()} />;
+  if (path === '/connexion' || path === '/inscription' || path === '/proprietaire/tableau-de-bord' || path === '/secret-administration' || path === '/super-admin/tableau-de-bord' || path === '/client/tableau-de-bord' || path.startsWith('/reservation/')) {
+    const page = path === '/connexion' ? <LoginPage /> : path === '/inscription' ? <SignUpPage /> : path === '/proprietaire/tableau-de-bord' ? <OwnerDashboard /> : path === '/secret-administration' ? <SuperAdminAuthPage /> : path === '/super-admin/tableau-de-bord' ? <SuperAdminDashboard /> : path === '/client/tableau-de-bord' ? <ClientDashboard /> : <BookingPage hotelId={path.split('/').pop()} />;
     return <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col"><Navbar alwaysVisible /><div className="grow">{page}</div><Footer /><ToastContainer /></div>;
   }
   return <>
